@@ -1,0 +1,11 @@
+#*.png
+#*.jpeg
+# security /ssl
+*.pem
+*.xxjson
+
+# Anything under a tmp folder
+**/tmp/*
+
+#Don't include our bindary
+lenslocked.com.exe
