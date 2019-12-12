@@ -6,11 +6,16 @@ import (
 )
 
 func handlerFunc(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("Someone visited our page", r.URL)
-	w.Header().Set("Content-Type ", "text/html")
-	fmt.Fprint(w, "<h1>Welcome to my super awsome site!</h1>")
+	w.Header().Set("Content-Header", "text/html")
+	if r.URL.Path == "/" {
+		fmt.Fprint(w, "<h1>Welcome to my super awsome site!</h1>")
+	} else if r.URL.Path == "/contact" {
+		fmt.Fprint(w, "<a href=\"support@lenslocked.com\">support@lenslocked.com</a/")
+	}
+
 }
+
 func main() {
 	http.HandleFunc("/", handlerFunc)
-	http.ListenAndServe("localhost:3000", nil)
+	http.ListenAndServe("localhost:8000", nil)
 }
