@@ -3,30 +3,34 @@ package main
 import (
 	"fmt"
 	"net/http"
-	"log"
-    "github.com/julienschmidt/httprouter"
+
+	"github.com/gorilla/mux"
 )
 
 func handlerFunc(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Header", "text/html")
-	if r.URL.Path == "/" {
-		fmt.Fprint(w, "<h1>Welcome to my super awsome site!</h1>")
-	} else if r.URL.Path == "/contact" {
-		fmt.Fprint(w, "<a href=\"support@lenslocked.com\">support@lenslocked.com</a>")
-	} else {
-		w.WriteHeader(http.StatusNotFound)
-		fmt.Fprint(w, "<h1>Page not found</h1><p>Please contact us if you keep being sent to an invalid page</p>")
-	}
-
+	w.Header().Set("Content-Type", "text/html")
+	fmt.Fprint(w, "<h1>Welcome to my awsome site!</h1>")
 }
 
-func Hello(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-    fmt.Fprintf(w, "Hola, %s!\n", ps.ByName("name"))
+func home(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "text/html")
+	fmt.Fprint(w, "<h1>Welcome to my awesome site!</h1>")
+}
+
+func contact(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "text/html")
+	fmt.Fprint(w, "<h1>To get in touch, please send and email to <a href = \"support@lenslocked.com\"</h1>")
+}
+
+func faq(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "text/html")
+	fmt.Fprint(w, "<h1>FAQ Page</h1>")
 }
 
 func main() {
-	router := httprouter.New()
-	router.GET("/hello/:name/spanish", Hello)
-
-    log.Fatal(http.ListenAndServe(":8000", router))
+	r := mux.NewRouter()
+	r.HandleFunc("/", home)
+	r.HandleFunc("/contact", contact)
+	r.HandleFunc("/faq", faq)
+	http.ListenAndServe(":8000", r)
 }
