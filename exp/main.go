@@ -5,9 +5,13 @@ import (
 	"os"
 )
 
+type Dog struct {
+	Name string
+}
+
 type User struct {
 	Name string
-	Dog  string
+	Dog  Dog
 	Age  int
 }
 
@@ -20,7 +24,7 @@ func main() {
 
 	data := User{
 		Name: "Stoyan Stoyanov",
-		Dog:  "Rex",
+		Dog:  Dog{Name: "Rex"},
 		Age:  18,
 	}
 
