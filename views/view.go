@@ -1,10 +1,10 @@
 package views
-import "http/template"
+import "html/template"
 
 func NewView (files ...string) *View{
 	files = append(files, "views/layouts/footer.gohtml")
 
-	t,err = template.ParseFiles(files...)
+	t,err := template.ParseFiles(files...)
 	if err!= nil{
 		panic(err)
 	}
@@ -14,6 +14,6 @@ func NewView (files ...string) *View{
 	}
 }
 
-type struct View {
+type View struct{
 	Template *template.Template
 }
