@@ -2,6 +2,7 @@ package views
 import (
 	"html/template"
 	"path/filepath"
+	"net/http"
 )
 var (
 	LayoutDir string  = "views/layouts/"
@@ -10,7 +11,6 @@ var (
 
 func NewView (layout string, files ...string) *View{
 	files = append(files, layoutFiles()...)
-		
 	t,err := template.ParseFiles(files...)
 	if err!= nil{
 		panic(err)
@@ -27,9 +27,15 @@ type View struct{
 	Layout string
 }
 
+//Render is used to render the view with the predifined layouy
+func (v *View) Render(w http.ResponseWriter, data interface{}) error {
+	return v.Template.ExecuteTemplate(w, v.Layout, data)
+}
+
 //returns a slice of strings representing
 //the layout files used in our application
-func layoutFiles() []string {LayoutDir + "*" + TemplateExt)
+func layoutFiles() []string {
+	files, err := filepath.Glob(LayoutDir + "*" + TemplateExt)
 	if err != nil {
 		panic(err)
 	}
