@@ -2,7 +2,6 @@ package controllers
 
 import (
 "github.com/SStoyanov22/lenslocked.com/views"
-"github.com/gorilla/schema"
 "net/http"
 "fmt"
 )
