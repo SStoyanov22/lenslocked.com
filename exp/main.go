@@ -1,41 +1,40 @@
 package main
 
 import (
-	"html/template"
-	"os"
+	_ "github.com/lib/pq"
+	"database/sql"
+	"fmt"
 )
 
-type Dog struct {
-	Name string
-}
-
-type User struct {
-	Name string
-	Dog  Dog
-	Age  int
-}
+const (
+	host   = "localhost"
+	port   = 5432
+	user   = "lenslocked_dev"
+	password = "lenslocked_dev"
+	dbname = "lenslocked_dev"
+)
 
 func main() {
-	t, err := template.ParseFiles("hello.gohtml")
+	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s", host, port, user, password, dbname)
+	db, err := sql.Open("postgres", psqlInfo)
 
+	err = db.Ping()
 	if err != nil {
 		panic(err)
 	}
 
-	data := User{
-		Name: "Stoyan Stoyanov",
-		Dog:  Dog{Name: "Rex"},
-		Age:  18,
-	}
+	fmt.Println("Successfully connected!")
+	defer db.Close()
 
-	err = t.Execute(os.Stdout, data)
-	if err != nil {
+	var id int
+
+	err = db.QueryRow(`
+	INSERT INTO users(name,email)
+	VALUES ($1, $2) RETURNING id`,"Stoyan Stoyanov","melloboy89@gmail.com").Scan(&id)
+
+	if err!=nil{
 		panic(err)
 	}
 
-	data.Name = "John Smith"
-	err = t.Execute(os.Stdout, data)
-	if err != nil {
-		panic(err)
-	}
+	fmt.Println("id is ...", id)
 }
