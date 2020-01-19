@@ -8,7 +8,8 @@ import (
 )
 
 var (
-	ErrNotFound = errors.New("models: resource not found")
+	ErrNotFound  = errors.New("models: resource not found")
+	ErrInvalidId = errors.New("models: ID provided was invalid")
 )
 
 type User struct {
@@ -50,15 +51,28 @@ func (us *UserService) ById(id uint) (*User, error) {
 	return &user, nil
 }
 
-func (us *UserService) ByEmail(email string) (*User error){
-	var user user
-	db := us.db.Where("email=?",email)
+func (us *UserService) ByEmail(email string) (*User, error) {
+	var user User
+	db := us.db.Where("email=?", email)
 	err := first(db, user)
-	if err!= nil{
+	if err != nil {
 		return nil, err
 	}
 
 	return &user, nil
+}
+
+func (us *UserService) Update(user *User) error {
+	return us.db.Save(user).Error
+}
+
+func (us *UserService) Delete(id uint) error {
+	if id == 0 {
+		return ErrInvalidId
+	}
+
+	user := User{Model: gorm.Model{ID: id}}
+	return us.db.Delete(&user).Error
 }
 
 func (us *UserService) DestructiveReset() {
