@@ -1,9 +1,10 @@
 package main
 
 import (
+	"net/http"
+
 	"github.com/SStoyanov22/lenslocked.com/controllers"
 	"github.com/gorilla/mux"
-	"net/http"
 )
 
 func main() {
