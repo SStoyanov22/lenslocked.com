@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"fmt"
+	"github.com/SStoyanov22/lenslocked.com/models"
 	"github.com/SStoyanov22/lenslocked.com/views"
 	"net/http"
 )
@@ -9,14 +10,16 @@ import (
 //used to create new users controller
 //will panic if templates are not passed correctly
 //and should only be used during initial setup
-func NewUsers() *Users {
+func NewUsers(us *models.UserService) *Users {
 	return &Users{
 		NewView: views.NewView("bootstrap", "users/new"),
+		us:      us,
 	}
 }
 
 type Users struct {
 	NewView *views.View
+	us      *models.UserService
 }
 
 func New(u *Users, w http.ResponseWriter, r *http.Request) {
@@ -24,6 +27,7 @@ func New(u *Users, w http.ResponseWriter, r *http.Request) {
 }
 
 type SignupForm struct {
+	Name     string `shhema:"name"`
 	Email    string `schema:"email"`
 	Password string `schema:"password"`
 }
@@ -44,5 +48,16 @@ func (u *Users) Create(w http.ResponseWriter, r *http.Request) {
 	if err := parseForm(r, &form); err != nil {
 		panic(err)
 	}
-	fmt.Fprintln(w, form)
+
+	user := models.User{
+		Name:  form.Name,
+		Email: form.Email,
+	}
+
+	if err := u.us.Create(&user); err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	fmt.Fprintln(w, "User is", user)
 }

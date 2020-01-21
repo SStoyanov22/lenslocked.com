@@ -16,13 +16,17 @@
 {{define "signupForm"}}
     <form action="/signup" method = "POST">
     <div class="form-group">
-        <label for="exampleInputEmail1">Email address</label>
-        <input type="email" name = "email" class="form-control" id="email" aria-describedby="emailHelp"
-        placeholder = "Email">
-        <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+        <label for="name">Name</label>
+        <input type="name" name = "name" class="form-control" id="name" aria-describedby="name"
+        placeholder = "Your full name">
     </div>
     <div class="form-group">
-        <label for="exampleInputPassword1">Password</label>
+        <label for="email1">Email address</label>
+        <input type="email" name = "email" class="form-control" id="email" aria-describedby="email"
+        placeholder = "Email">
+    </div>
+    <div class="form-group">
+        <label for="password1">Password</label>
         <input type="password" name = "password" class="form-control" id="password" 
         placeholder = "Password">
     </div>

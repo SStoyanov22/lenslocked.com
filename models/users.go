@@ -39,6 +39,10 @@ func (us *UserService) Close() error {
 	return us.db.Close()
 }
 
+func (us *UserService) Automigrate() error {
+	return us.db.AutoMigrate().Error
+}
+
 func (us *UserService) ById(id uint) (*User, error) {
 	var user User
 	db := us.db.Where("id=?", id)
@@ -75,9 +79,17 @@ func (us *UserService) Delete(id uint) error {
 	return us.db.Delete(&user).Error
 }
 
-func (us *UserService) DestructiveReset() {
-	us.db.DropTableIfExists(&User{})
-	us.db.AutoMigrate(&User{})
+func (us *UserService) Create(user *User) error {
+	return us.db.Create(&user).Error
+}
+
+func (us *UserService) DestructiveReset() error {
+	err := us.db.DropTableIfExists().Error
+	if err != nil {
+		return err
+	}
+
+	return us.db.AutoMigrate().Error
 }
 
 //first will query using the provided gorm.DB and it will
